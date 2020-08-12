@@ -5,24 +5,15 @@
 #define SECTION_SizeOfRawData PSECTION_HEADER[i].SizeOfRawData
 #define SECTION_PointerToRawData PSECTION_HEADER[i].PointerToRawData
 
-#define IMPORT_RVA PIMPORT_Directory_Table->VirtualAddress
-#define IMPORT_SIZE PIMPORT_Directory_Table->Size
+#define IMPORT_RVA PDirectory->VirtualAddress
+#define IMPORT_SIZE PDirectory->Size
 
-extern DWORD OFFSET;
-
-int check_IAT(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PIMPORT_Directory_Table, DWORD NumberOfSection)
+int getImportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
 {
-	DWORD SectionEND;
-	DWORD FileOffset;
-	for (DWORD i = 0; i < NumberOfSection; i++)
+	unsigned int SectionEND;
+	unsigned int FileOffset;
+	for (unsigned int i = 0; i < NumberOfSection; i++)
 	{
-		/*
-		Debug Code!
-		printf("%08x : VirtualSize\n", PSECTION_HEADER[i].Misc.VirtualSize);
-		printf("%08x : VirtualAddress(VA)\n", SECTION_VirtualAddress);
-		printf("%08x : SizeOfRawData\n", SECTION_SizeOfRawData);
-		printf("%08x : PointerToRawData\n", SECTION_PointerToRawData);
-		*/
 		SectionEND = SECTION_SizeOfRawData + SECTION_PointerToRawData;
 		if (PSECTION_HEADER[i].Misc.VirtualSize > SECTION_SizeOfRawData)
 		{
@@ -34,9 +25,16 @@ int check_IAT(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PIMPO
 		if (IMPORT_RVA > SECTION_PointerToRawData && IMPORT_RVA < SectionEND)
 		{
 			FileOffset = IMPORT_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;
-			printf("FileOffset : %08X\n", FileOffset);
+			printf("\n\nFileOffset : %08X\n", FileOffset);
 			return FileOffset;
 		}
+		// RVA가 없거나, RVA가 section범위를 초과하면 함수 종료
+		else if (IMPORT_RVA == 0 || IMPORT_RVA < SECTION_PointerToRawData)
+		{
+			printf("Can't Find IMPORT RVA's File Offest\n");
+			return 0;
+		}
+		// 없으면 건너뜀
 		else
 		{
 			continue;
@@ -46,12 +44,11 @@ int check_IAT(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PIMPO
 	return 0;
 }
 
-int showIAT(PIMAGE_IMPORT_DESCRIPTOR PImportDirectoryTable)
+int showImportDirectory(PIMAGE_IMPORT_DESCRIPTOR PImageDirectory, unsigned int FileOffset)
 {
-	printf("%8X : OriginalFirstThunk(INT)\n", PImportDirectoryTable->OriginalFirstThunk);
-	printf("%8X : TimeDateStamp\n", PImportDirectoryTable->TimeDateStamp);
-	printf("%8X : ForwarderChain\n", PImportDirectoryTable->ForwarderChain);
-	printf("%8X : Name\n", PImportDirectoryTable->Name);
-	printf("%8X : FirstThunk(IAT)\n", PImportDirectoryTable->FirstThunk);
-	return 0;
+	printf("%08X\t%08X\t%-16s\n", FileOffset, PImageDirectory->OriginalFirstThunk,"OriginalFirstThunk");
+	printf("%08X\t%08X\t%-16s\n", FileOffset +=sizeof(PImageDirectory->OriginalFirstThunk), PImageDirectory->TimeDateStamp, "TimeDateStamp");
+	printf("%08X\t%08X\t%-16s\n", FileOffset += sizeof(PImageDirectory->TimeDateStamp), PImageDirectory->ForwarderChain, "ForwarderChain");
+	printf("%08X\t%08X\t%-16s\n", FileOffset += sizeof(PImageDirectory->ForwarderChain), PImageDirectory->Name, "Name");
+	printf("%08X\t%08X\t%-16s\n\n", FileOffset += sizeof(PImageDirectory->Name), PImageDirectory->FirstThunk, "FirstThunk");
 }
