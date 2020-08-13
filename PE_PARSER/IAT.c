@@ -1,5 +1,4 @@
-#include <Windows.h>
-#include <stdio.h>
+#include "SectionHeader.h"
 
 #define SECTION_VirtualAddress PSECTION_HEADER[i].VirtualAddress
 #define SECTION_SizeOfRawData PSECTION_HEADER[i].SizeOfRawData
@@ -7,9 +6,11 @@
 
 #define IMPORT_RVA PDirectory->VirtualAddress
 #define IMPORT_SIZE PDirectory->Size
+int showImportDirectory(PIMAGE_IMPORT_DESCRIPTOR PImageDirectory, unsigned int FileOffset, unsigned int VA, unsigned int PointerToRawData);
 
 int getImportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
 {
+	IMAGE_IMPORT_DESCRIPTOR ImageDirectory;
 	unsigned int SectionEND;
 	unsigned int FileOffset;
 	for (unsigned int i = 0; i < NumberOfSection; i++)
@@ -25,7 +26,9 @@ int getImportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY
 		if (IMPORT_RVA > SECTION_PointerToRawData && IMPORT_RVA < SectionEND)
 		{
 			FileOffset = IMPORT_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;
-			printf("\n\nFileOffset : %08X\n", FileOffset);
+			fseek(fp, FileOffset, SEEK_SET);
+			fread(&ImageDirectory, sizeof(IMAGE_IMPORT_DESCRIPTOR), 1, fp);
+			showImportDirectory(&ImageDirectory, FileOffset, SECTION_VirtualAddress, SECTION_PointerToRawData);
 			return FileOffset;
 		}
 		// RVA가 없거나, RVA가 section범위를 초과하면 함수 종료
@@ -41,14 +44,22 @@ int getImportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY
 		}
 	}
 	printf("Can't Find IMPORT RVA's File Offest\n");
-	return 0;
+	return 0;	
 }
 
-int showImportDirectory(PIMAGE_IMPORT_DESCRIPTOR PImageDirectory, unsigned int FileOffset)
+int showImportDirectory(PIMAGE_IMPORT_DESCRIPTOR PImageDirectory, unsigned int FileOffset, unsigned int VA, unsigned int PointerToRawData)
 {
-	printf("%08X\t%08X\t%-16s\n", FileOffset, PImageDirectory->OriginalFirstThunk,"OriginalFirstThunk");
-	printf("%08X\t%08X\t%-16s\n", FileOffset +=sizeof(PImageDirectory->OriginalFirstThunk), PImageDirectory->TimeDateStamp, "TimeDateStamp");
-	printf("%08X\t%08X\t%-16s\n", FileOffset += sizeof(PImageDirectory->TimeDateStamp), PImageDirectory->ForwarderChain, "ForwarderChain");
-	printf("%08X\t%08X\t%-16s\n", FileOffset += sizeof(PImageDirectory->ForwarderChain), PImageDirectory->Name, "Name");
-	printf("%08X\t%08X\t%-16s\n\n", FileOffset += sizeof(PImageDirectory->Name), PImageDirectory->FirstThunk, "FirstThunk");
+	printf("\nVA : %08X\n", VA);
+	printf("PointerToRawData : %08X\n", PointerToRawData);
+	printf("VALUE - VA + PointerToRawData = RVA\n");
+	printf("\n%8s\t%8s\t%8s\t%-16s\n", "OFFSET", "VALUE","RVA", "DESCRIPTION");
+	printf("%08X\t%08X\t%08X\t%-16s\n", FileOffset, PImageDirectory->OriginalFirstThunk,
+		(PImageDirectory->OriginalFirstThunk - VA + PointerToRawData),"OriginalFirstThunk");
+	printf("%08X\t%08X\t%08X\t%-16s\n", FileOffset +=sizeof(PImageDirectory->OriginalFirstThunk), PImageDirectory->TimeDateStamp,0, "TimeDateStamp");
+	printf("%08X\t%08X\t%08X\t%-16s\n", FileOffset += sizeof(PImageDirectory->TimeDateStamp), PImageDirectory->ForwarderChain,0, "ForwarderChain");
+	printf("%08X\t%08X\t%08X\t%-16s\n", FileOffset += sizeof(PImageDirectory->ForwarderChain), PImageDirectory->Name,
+		(PImageDirectory->Name - VA + PointerToRawData), "Name");
+	printf("%08X\t%08X\t%08X\t%-16s\n\n", FileOffset += sizeof(PImageDirectory->Name), PImageDirectory->FirstThunk,
+		(PImageDirectory->FirstThunk - VA + PointerToRawData), "FirstThunk");
+	return 0;
 }

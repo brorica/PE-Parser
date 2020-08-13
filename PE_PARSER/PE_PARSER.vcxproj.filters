@@ -44,9 +44,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ImageHeader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="NT_HEADER_OFFSET.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>

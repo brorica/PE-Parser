@@ -5,12 +5,11 @@ int File_Header(PIMAGE_FILE_HEADER PFILE_HEADER, unsigned int RVA);
 int OPTIONAL_HEADER64(PIMAGE_OPTIONAL_HEADER64 POPTIONAL_HEADER, unsigned int RVA);
 int OPTIONAL_HEADER32(PIMAGE_OPTIONAL_HEADER32 POPTIONAL_HEADER, unsigned int RVA);
 
-int NT_Header(FILE *fp, unsigned int RVA)
+int NT_Header(unsigned int RVA)
 {
 	IMAGE_NT_HEADERS NT_Header;
 	int File_Header_Size = sizeof(IMAGE_FILE_HEADER)+sizeof(NT_Header.Signature);
 	int MachineCheck;
-	
 	fread(&NT_Header, File_Header_Size, 1, fp);
 	printf("%08X\t%08X\t%-16s\n\n", RVA, NT_Header.Signature, "Signature");
 	MachineCheck = File_Header(&(NT_Header.FileHeader), RVA + sizeof(NT_Header.Signature));
@@ -22,14 +21,14 @@ int NT_Header(FILE *fp, unsigned int RVA)
 		IMAGE_OPTIONAL_HEADER64 Optional_Header;
 		fread(&Optional_Header, sizeof(IMAGE_OPTIONAL_HEADER64), 1, fp);
 		RVA += OPTIONAL_HEADER64(&Optional_Header, RVA);
-		Section_Header(fp, Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
+		Section_Header(Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
 	}
 	else if (MachineCheck == 0)
 	{
 		IMAGE_OPTIONAL_HEADER32 Optional_Header;
 		fread(&Optional_Header, sizeof(IMAGE_OPTIONAL_HEADER32), 1, fp);
 		RVA += OPTIONAL_HEADER32(&Optional_Header, RVA);
-		Section_Header(fp, Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
+		Section_Header(Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
 	}
 	
 	return RVA;

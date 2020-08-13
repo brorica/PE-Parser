@@ -151,7 +151,6 @@
     <ClCompile Include="SECTION_HEADER.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ImageHeader.h" />
     <ClInclude Include="NT_HEADER_OFFSET.h" />
     <ClInclude Include="SectionHeader.h" />
   </ItemGroup>

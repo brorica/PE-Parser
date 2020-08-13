@@ -5,12 +5,11 @@
 // RAW = RVA - VirtualAddress + PointerToRawData
 // VirtualSize > SizeOfRawData ¸é ¼º¸³ X
 
-int Section_Header(FILE* fp, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned int SectionNumber)
+int Section_Header(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned int SectionNumber)
 {
 	unsigned int SectionSize = sizeof(IMAGE_SECTION_HEADER);
 	unsigned int FileOffset = 0;
 	PIMAGE_SECTION_HEADER PSECTION_HEADER;
-	IMAGE_IMPORT_DESCRIPTOR ImageDirectory;
 	PSECTION_HEADER = (PIMAGE_SECTION_HEADER)malloc(SectionSize * SectionNumber);
 	for (unsigned int i = 0; i < SectionNumber; i++)
 	{
@@ -30,9 +29,6 @@ int Section_Header(FILE* fp, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA,
 	}
 	// FileOffset = getExportOffset(PSECTION_HEADER, &PDirectory[0], SectionNumber);
 	FileOffset = getImportOffset(PSECTION_HEADER, &PDirectory[1], SectionNumber);
-	fseek(fp, FileOffset, SEEK_SET);
-	fread(&ImageDirectory, sizeof(IMAGE_IMPORT_DESCRIPTOR), 1, fp);
-	showImportDirectory(&ImageDirectory, FileOffset);
 	free(PSECTION_HEADER);
 	return RVA;
 }

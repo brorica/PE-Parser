@@ -1,8 +1,12 @@
 #pragma once
 #include <Windows.h>
 #include <stdio.h>
-int Section_Header(FILE* fp, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned int SectionNumber);
 
+FILE* fp;
+
+int NT_Header(unsigned int RVA);
+int Dos_Header(FILE *fp);
+int Section_Header(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned int SectionNumber);
 /*
  * IAT Function
  * success return : file offset
@@ -10,6 +14,3 @@ int Section_Header(FILE* fp, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA,
  */
 int getImportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection);
 int getExportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection);
-
-int showImportDirectory(PIMAGE_IMPORT_DESCRIPTOR PImageDirectory, unsigned int FileOffset);
-int showExportDirectory(PIMAGE_IMPORT_DESCRIPTOR PImageDirectory, unsigned int FileOffset);
