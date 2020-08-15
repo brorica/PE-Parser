@@ -15,7 +15,6 @@ int main()
 	RVA = Dos_Header(fp);
 	fseek(fp, RVA, SEEK_SET);
 	RVA = NT_Header(RVA);
-	
 	fclose(fp);
 	return 0;
 }

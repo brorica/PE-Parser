@@ -148,7 +148,7 @@
     <ClCompile Include="NT_HEADER_OFFSET.c" />
     <ClCompile Include="NT_HEADER_OPTIONAL32.c" />
     <ClCompile Include="NT_HEADER_OPTIONAL64.c" />
-    <ClCompile Include="SECTION_HEADER.c" />
+    <ClCompile Include="SECTION_HEADER64.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NT_HEADER_OFFSET.h" />

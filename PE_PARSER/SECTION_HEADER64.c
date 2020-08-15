@@ -5,7 +5,7 @@
 // RAW = RVA - VirtualAddress + PointerToRawData
 // VirtualSize > SizeOfRawData ¸é ¼º¸³ X
 
-int Section_Header(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned int SectionNumber)
+int Section_Header64(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned int SectionNumber)
 {
 	unsigned int SectionSize = sizeof(IMAGE_SECTION_HEADER);
 	unsigned int FileOffset = 0;
@@ -28,7 +28,7 @@ int Section_Header(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned 
 		RVA += sizeof(PSECTION_HEADER->Characteristics);
 	}
 	// FileOffset = getExportOffset(PSECTION_HEADER, &PDirectory[0], SectionNumber);
-	FileOffset = getImportOffset(PSECTION_HEADER, &PDirectory[1], SectionNumber);
+	FileOffset = getImportOffset64(PSECTION_HEADER, &PDirectory[1], SectionNumber);
 	free(PSECTION_HEADER);
 	return RVA;
 }

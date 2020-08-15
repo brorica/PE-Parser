@@ -21,14 +21,14 @@ int NT_Header(unsigned int RVA)
 		IMAGE_OPTIONAL_HEADER64 Optional_Header;
 		fread(&Optional_Header, sizeof(IMAGE_OPTIONAL_HEADER64), 1, fp);
 		RVA += OPTIONAL_HEADER64(&Optional_Header, RVA);
-		Section_Header(Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
+		Section_Header64(Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
 	}
 	else if (MachineCheck == 0)
 	{
 		IMAGE_OPTIONAL_HEADER32 Optional_Header;
 		fread(&Optional_Header, sizeof(IMAGE_OPTIONAL_HEADER32), 1, fp);
 		RVA += OPTIONAL_HEADER32(&Optional_Header, RVA);
-		Section_Header(Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
+		Section_Header64(Optional_Header.DataDirectory, RVA, NT_Header.FileHeader.NumberOfSections);
 	}
 	
 	return RVA;

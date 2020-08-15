@@ -39,7 +39,7 @@
     <ClCompile Include="NT_HEADER_OPTIONAL64.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SECTION_HEADER.c">
+    <ClCompile Include="SECTION_HEADER64.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
