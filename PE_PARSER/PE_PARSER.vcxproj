@@ -102,6 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,13 +140,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EAT.c" />
     <ClCompile Include="IAT.c" />
+    <ClCompile Include="IMAGE_DOS_HEADER.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="ntHeader.c" />
-    <ClCompile Include="sectionHeader.c" />
+    <ClCompile Include="NT_HEADER.c" />
+    <ClCompile Include="NT_HEADER_OFFSET.c" />
+    <ClCompile Include="NT_HEADER_OPTIONAL32.c" />
+    <ClCompile Include="NT_HEADER_OPTIONAL64.c" />
+    <ClCompile Include="SECTION_HEADER64.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="showHeader.h" />
+    <ClInclude Include="NT_HEADER_OFFSET.h" />
+    <ClInclude Include="SectionHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

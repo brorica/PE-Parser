@@ -21,15 +21,33 @@
     <ClCompile Include="IAT.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ntHeader.c">
+    <ClCompile Include="EAT.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="sectionHeader.c">
+    <ClCompile Include="IMAGE_DOS_HEADER.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="NT_HEADER.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="NT_HEADER_OFFSET.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="NT_HEADER_OPTIONAL32.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="NT_HEADER_OPTIONAL64.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SECTION_HEADER64.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="showHeader.h">
+    <ClInclude Include="NT_HEADER_OFFSET.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SectionHeader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
