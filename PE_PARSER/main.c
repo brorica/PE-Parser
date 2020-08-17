@@ -4,11 +4,10 @@
 int main()
 {
 	unsigned int RVA = 0;
-	fp = fopen("notepad.exe", "rb");
-	if (fp == NULL)
+	if ((fp = fopen("notepad.exe", "rb")) == NULL)
 	{
-		fprintf(stderr, "fopen failed\n");
-		return -1;
+		fprintf(stderr, "File open error\n");
+		return 1;
 	}
 	printf("%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "DESCRIPTION");
 	// get NT header offset
