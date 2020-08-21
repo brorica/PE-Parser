@@ -16,6 +16,9 @@
     <Filter Include="소스 파일\64bit">
       <UniqueIdentifier>{c471dec6-bbb7-41b3-bc91-59f8d5c5fa60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\32bit">
+      <UniqueIdentifier>{b0313a96-2878-485b-9506-520f681ae054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -30,13 +33,7 @@
     <ClCompile Include="IMAGE_DOS_HEADER.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="NT_HEADER.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="NT_HEADER_OFFSET.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="NT_HEADER_OPTIONAL32.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="NT_HEADER64.c">
@@ -45,8 +42,14 @@
     <ClCompile Include="NT_HEADER_OPTIONAL64.c">
       <Filter>소스 파일\64bit</Filter>
     </ClCompile>
-    <ClCompile Include="SECTION_HEADER64.c">
-      <Filter>소스 파일\64bit</Filter>
+    <ClCompile Include="NT_HEADER32.c">
+      <Filter>소스 파일\32bit</Filter>
+    </ClCompile>
+    <ClCompile Include="NT_HEADER_OPTIONAL32.c">
+      <Filter>소스 파일\32bit</Filter>
+    </ClCompile>
+    <ClCompile Include="SECTION_HEADER.c">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

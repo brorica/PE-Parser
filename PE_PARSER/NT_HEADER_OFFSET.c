@@ -10,6 +10,7 @@ int setFileHeaderElementOffset(PFILE_HEADER_ELEMENT_OFFSET ElementOffset)
 	ElementOffset->NumberOfSymbols = (Offset += sizeof(File_Header.PointerToSymbolTable));
 	ElementOffset->SizeOfOptionalHeader = (Offset += sizeof(File_Header.NumberOfSymbols));
 	ElementOffset->Characteristics = (Offset += sizeof(File_Header.SizeOfOptionalHeader));
+	Offset += sizeof(File_Header.Characteristics);
 	return Offset;
 }
 
@@ -51,6 +52,7 @@ int setOptionalHeader32_ElementOffset(POPTIONAL_HEADER32_ELEMENT_OFFSET ElementO
 		ElementOffset->DataDirectory[i][0] = (Offset += sizeof(Optional_Header32.DataDirectory->VirtualAddress));
 		ElementOffset->DataDirectory[i][1] = (Offset += sizeof(Optional_Header32.DataDirectory->Size));
 	}
+	Offset += sizeof(DWORD);
 	return Offset;
 }
 
@@ -86,10 +88,11 @@ int setOptionalHeader64_ElementOffset(POPTIONAL_HEADER64_ELEMENT_OFFSET ElementO
 	ElementOffset->SizeOfHeapCommit = (Offset += sizeof(Optional_Header64.SizeOfHeapReserve));
 	ElementOffset->LoaderFlags = (Offset += sizeof(Optional_Header64.SizeOfHeapCommit));
 	ElementOffset->NumberOfRvaAndSizes = (Offset += sizeof(Optional_Header64.LoaderFlags));
-	for (int i = 0; i < (IMAGE_NUMBEROF_DIRECTORY_ENTRIES-1); i ++)
+	for (int i = 0; i < (IMAGE_NUMBEROF_DIRECTORY_ENTRIES); i ++)
 	{
 		ElementOffset->DataDirectory[i][0] = (Offset += sizeof(Optional_Header64.DataDirectory->VirtualAddress));
 		ElementOffset->DataDirectory[i][1] = (Offset += sizeof(Optional_Header64.DataDirectory->Size));
 	}
+	Offset += sizeof(DWORD);
 	return Offset;
 }

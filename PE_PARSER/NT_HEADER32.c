@@ -1,32 +1,26 @@
 #include "NT_HEADER_OFFSET.h"
 #include "SectionHeader.h"
 
-#define SectionNumber NT_Header.FileHeader.NumberOfSections
 #define SectionSize sizeof(IMAGE_SECTION_HEADER)
-#define PImportDirectory &NT_Header.OptionalHeader.DataDirectory[1]
+#define PImportDirectory &NT_Header->OptionalHeader.DataDirectory[1]
 
 int File_Header32(PIMAGE_FILE_HEADER PFILE_HEADER);
 
-int NT_Header32()
+int NT_Header32(PIMAGE_NT_HEADERS32 NT_Header)
 {
-	IMAGE_NT_HEADERS32 NT_Header;
-	PIMAGE_SECTION_HEADER PSECTION_HEADER;
-	fread(&NT_Header, sizeof(IMAGE_NT_HEADERS64), 1, fp);
-	printf("%08X\t%08X\t%-16s\n\n", Offset, NT_Header.Signature, "Signature");
-	File_Header32(&NT_Header.FileHeader);
-	OPTIONAL_HEADER32(&NT_Header.OptionalHeader);
-	PSECTION_HEADER = (PIMAGE_SECTION_HEADER)malloc(SectionSize * SectionNumber);
-	Section_Header64(PSECTION_HEADER);
-	getImportOffset64(PSECTION_HEADER, PImportDirectory, SectionNumber);
-	free(PSECTION_HEADER);
-	return Offset;
+	fread(NT_Header, sizeof(IMAGE_NT_HEADERS64), 1, fp);
+	printf("%08X\t%08X\t%-16s\n\n", Offset, NT_Header->Signature, "Signature");
+	File_Header32(&NT_Header->FileHeader);
+	OPTIONAL_HEADER32(&NT_Header->OptionalHeader);
+	//getImportOffse32(PSECTION_HEADER, PImportDirectory, SectionNumber);
+	return NT_Header->FileHeader.NumberOfSections;
 }
 
 int File_Header32(PIMAGE_FILE_HEADER PFILE_HEADER)
 {
 	FILE_HEADER_ELEMENT_OFFSET ElementOffset;
 	Offset += sizeof(DWORD);	// NT_HEADER Signature
-	Offset += setFileHeaderElementOffset(&ElementOffset, Offset);
+	Offset += setFileHeaderElementOffset(&ElementOffset);
 	printf("%08X\t%08.4X\t%-16s\n", ElementOffset.Machine, PFILE_HEADER->Machine, "Machine");
 	// Section °¹¼ö
 	printf("%08X\t%08.4X\t%-16s\n", ElementOffset.NumberOfSections, PFILE_HEADER->NumberOfSections, "NumberOfSections");

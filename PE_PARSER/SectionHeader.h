@@ -3,14 +3,14 @@
 #include <stdio.h>
 #include "File.h"
 
-int NT_Header32();
-int NT_Header64();
+int NT_Header32(PIMAGE_NT_HEADERS32 NT_Header);
+int NT_Header64(PIMAGE_NT_HEADERS64 NT_Header);
 int Dos_Header(FILE *fp);
-int Section_Header64(PIMAGE_SECTION_HEADER PSECTION_HEADER);
+int Section_Header(PIMAGE_SECTION_HEADER PSECTION_HEADER, unsigned int SectionNumber);
 /*
  * IAT Function
  * success return : file offset
  * error return : 0
  */
-int getImportOffset64(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection);
-int getExportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection);
+int ImportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection);
+int ExportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection);

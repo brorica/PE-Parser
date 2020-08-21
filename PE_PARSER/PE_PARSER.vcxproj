@@ -144,12 +144,12 @@
     <ClCompile Include="IAT.c" />
     <ClCompile Include="IMAGE_DOS_HEADER.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="NT_HEADER.c" />
+    <ClCompile Include="NT_HEADER32.c" />
     <ClCompile Include="NT_HEADER64.c" />
     <ClCompile Include="NT_HEADER_OFFSET.c" />
     <ClCompile Include="NT_HEADER_OPTIONAL32.c" />
     <ClCompile Include="NT_HEADER_OPTIONAL64.c" />
-    <ClCompile Include="SECTION_HEADER64.c" />
+    <ClCompile Include="SECTION_HEADER.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="File.h" />

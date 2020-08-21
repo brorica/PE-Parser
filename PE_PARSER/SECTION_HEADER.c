@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include "SectionHeader.h"
-#define SectionSize sizeof(IMAGE_SECTION_HEADER)
 
 // RAW = Offset - VirtualAddress + PointerToRawData
 // VirtualSize > SizeOfRawData ¸é ¼º¸³ X
 
-int Section_Header64(PIMAGE_SECTION_HEADER PSECTION_HEADER)
-{
-	for (unsigned int i = 0; i < (IMAGE_NUMBEROF_DIRECTORY_ENTRIES - 1); i++)
+int Section_Header(PIMAGE_SECTION_HEADER PSECTION_HEADER, unsigned int SectionNumber)
+{	
+	unsigned int SectionSize = sizeof(IMAGE_SECTION_HEADER);
+	for (unsigned int i = 0; i < SectionNumber; i++)
 	{
 		fread(PSECTION_HEADER + i, SectionSize, 1, fp);
 		printf("\n%08X\t\t%-16s\n", Offset, (PSECTION_HEADER + i)->Name);
@@ -23,6 +23,5 @@ int Section_Header64(PIMAGE_SECTION_HEADER PSECTION_HEADER)
 		printf("%08X\t%08X\t%-16s\n", Offset += sizeof((PSECTION_HEADER + i)->NumberOfLinenumbers), (PSECTION_HEADER + i)->Characteristics, "Characteristics");
 		Offset += sizeof(PSECTION_HEADER->Characteristics);
 	}
-	// FileOffset = getExportOffset(PSECTION_HEADER, &PDirectory[0], SectionNumber);
 	return Offset;
 }

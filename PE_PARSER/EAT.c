@@ -10,7 +10,7 @@
 
 extern DWORD OFFSET;
 
-int getExportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
+int ExportOffset(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
 {
 	//IMAGE_EXPORT_DIRECTORY
 	return 0;

@@ -41,13 +41,13 @@ int OPTIONAL_HEADER64(PIMAGE_OPTIONAL_HEADER64 POPTIONAL_HEADER)
 int DATA_DIRECTORY64(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int DataDirectory[][2])
 {
 
-	char DIRECTORY_TYPE[IMAGE_NUMBEROF_DIRECTORY_ENTRIES - 1][16] = {
+	char DIRECTORY_TYPE[IMAGE_NUMBEROF_DIRECTORY_ENTRIES][16] = {
 		{ "EXPORT" },{ "IMPORT" }, {"RESOURCE"},{ "EXCEPTION" },
 		{ "SECURITY" },{ "BASERELOC" },{ "DEBUG" },
 		{ "ARCHITECTURE" }, { "GLOBALPTR " }, { "TLS" }, { "LOAD_CONFIG"},
-		{ "BOUND_IMPORT" }, { "IAT" }, { "DELAY_IMPORT" }, { "COM_DESCRIPTOR" } };
+		{ "BOUND_IMPORT" }, { "IAT" }, { "DELAY_IMPORT" }, { "COM_DESCRIPTOR" },{"NULL"} };
 
-	for (unsigned int i = 0; i < IMAGE_NUMBEROF_DIRECTORY_ENTRIES - 1; i++)
+	for (unsigned int i = 0; i < IMAGE_NUMBEROF_DIRECTORY_ENTRIES; i++)
 	{
 		printf("%08X\t%08X\t%-16s(RVA)\n", DataDirectory[i][0], PDirectory[i].VirtualAddress, DIRECTORY_TYPE[i]);
 		printf("%08X\t%08X\t%-16s(SIZE)\n", DataDirectory[i][1], PDirectory[i].Size, DIRECTORY_TYPE[i]);
