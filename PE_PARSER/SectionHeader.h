@@ -1,12 +1,12 @@
 #pragma once
 #include <Windows.h>
 #include <stdio.h>
+#include "File.h"
 
-FILE* fp;
-
-int NT_Header(unsigned int RVA);
+int NT_Header32();
+int NT_Header64();
 int Dos_Header(FILE *fp);
-int Section_Header64(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int RVA, unsigned int SectionNumber);
+int Section_Header64(PIMAGE_SECTION_HEADER PSECTION_HEADER);
 /*
  * IAT Function
  * success return : file offset

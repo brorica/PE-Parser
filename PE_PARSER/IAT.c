@@ -109,7 +109,7 @@ int showImportFunction(int  FirstThunkOffset, unsigned int VA, unsigned int Poin
 			break;
 		else if (ImportFunctionOffset < 0)
 		{
-			printf("%8s\t%8s\tOrdinal : %04X\n", "NULL","NULL", ImportFunctionOffset & 0xFFFF);
+			printf("%8s\t%8s\tOrdinal : %04X\n", "NULL","NULL", (int)ImportFunctionOffset & 0xFFFF);
 			fseek(fp, OriginfpPosition, SEEK_SET);
 			continue;
 		}

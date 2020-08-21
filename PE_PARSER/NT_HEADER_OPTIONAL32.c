@@ -1,10 +1,10 @@
 #include "NT_HEADER_OFFSET.h"
 int DATA_DIRECTORY32(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int DataDirectory[][2]);
 
-int OPTIONAL_HEADER32(PIMAGE_OPTIONAL_HEADER32 POPTIONAL_HEADER, unsigned int RVA)
+int OPTIONAL_HEADER32(PIMAGE_OPTIONAL_HEADER32 POPTIONAL_HEADER)
 {
 	OPTIONAL_HEADER32_ELEMENT_OFFSET ElementOffset;
-	setOptionalHeader32_ElementOffset(&ElementOffset, RVA);
+	setOptionalHeader32_ElementOffset(&ElementOffset);
 	printf("%08X\t%08.4X\t%-16s\n", ElementOffset.Magic, POPTIONAL_HEADER->Magic, "Magic");
 	//printf("%08X\t%08.2X\t%-16s\n", ElementOffset.MajorLinkerVersion, POPTIONAL_HEADER->MajorLinkerVersion, "MajorLinkerVersion");
 	//printf("%08X\t%08.2X\t%-16s\n", ElementOffset.MinorLinkerVersion, POPTIONAL_HEADER->MinorLinkerVersion, "MinorLinkerVersion");

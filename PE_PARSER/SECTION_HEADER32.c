@@ -6,8 +6,8 @@
 // VirtualSize > SizeOfRawData ¸é ¼º¸³ X
 
 int Section_Header64(PIMAGE_SECTION_HEADER PSECTION_HEADER)
-{	
-	for (unsigned int i = 0; i < (IMAGE_NUMBEROF_DIRECTORY_ENTRIES -1); i++)
+{
+	for (unsigned int i = 0; i < (IMAGE_NUMBEROF_DIRECTORY_ENTRIES - 1); i++)
 	{
 		fread(PSECTION_HEADER + i, SectionSize, 1, fp);
 		printf("\n%08X\t\t%-16s\n", Offset, (PSECTION_HEADER + i)->Name);

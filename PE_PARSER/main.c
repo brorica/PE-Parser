@@ -3,7 +3,8 @@
 
 int main()
 {
-	unsigned int RVA = 0;
+//	PIMAGE_NT_HEADERS32 PImage_Nt_Header32;
+//	PIMAGE_NT_HEADERS64 PImage_Nt_Header32;
 	if ((fp = fopen("notepad.exe", "rb")) == NULL)
 	{
 		fprintf(stderr, "File open error\n");
@@ -11,9 +12,9 @@ int main()
 	}
 	printf("%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "DESCRIPTION");
 	// get NT header offset
-	RVA = Dos_Header(fp);
-	fseek(fp, RVA, SEEK_SET);
-	RVA = NT_Header(RVA);
+	Offset = Dos_Header(fp);
+	fseek(fp, Offset, SEEK_SET);
+	Offset = NT_Header64();
 	fclose(fp);
 	return 0;
 }

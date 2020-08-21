@@ -1,9 +1,10 @@
 #pragma once
 #include <windows.h>
 #include <stdio.h>
+#include "File.h"
 
-int OPTIONAL_HEADER64(PIMAGE_OPTIONAL_HEADER64 POPTIONAL_HEADER, unsigned int RVA);
-int OPTIONAL_HEADER32(PIMAGE_OPTIONAL_HEADER32 POPTIONAL_HEADER, unsigned int RVA);
+int OPTIONAL_HEADER64(PIMAGE_OPTIONAL_HEADER64 POPTIONAL_HEADER);
+int OPTIONAL_HEADER32(PIMAGE_OPTIONAL_HEADER32 POPTIONAL_HEADER);
 
 typedef struct _FILE_HEADER_ELEMENT_OFFSET
 {
@@ -85,6 +86,6 @@ typedef struct _OPTIONAL_HEADER64_ELEMENT_OFFSET
     unsigned int DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES - 1][2];  // none Copyright
 }OPTIONAL_HEADER64_ELEMENT_OFFSET, * POPTIONAL_HEADER64_ELEMENT_OFFSET;
 
-int setFileHeaderElementOffset(PFILE_HEADER_ELEMENT_OFFSET,int RVA);
-int setOptionalHeader32_ElementOffset(POPTIONAL_HEADER32_ELEMENT_OFFSET ElementOffset,int RVA);
-int setOptionalHeader64_ElementOffset(POPTIONAL_HEADER64_ELEMENT_OFFSET ElementOffset,int RVA);
+int setFileHeaderElementOffset(PFILE_HEADER_ELEMENT_OFFSET,int Offset);
+int setOptionalHeader32_ElementOffset(POPTIONAL_HEADER32_ELEMENT_OFFSET ElementOffset);
+int setOptionalHeader64_ElementOffset(POPTIONAL_HEADER64_ELEMENT_OFFSET ElementOffset);
