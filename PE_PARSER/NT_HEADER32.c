@@ -8,7 +8,7 @@ int File_Header32(PIMAGE_FILE_HEADER PFILE_HEADER);
 
 int NT_Header32(PIMAGE_NT_HEADERS32 NT_Header)
 {
-	fread(NT_Header, sizeof(IMAGE_NT_HEADERS64), 1, fp);
+	fread(NT_Header, sizeof(IMAGE_NT_HEADERS32), 1, fp);
 	printf("%08X\t%08X\t%-16s\n\n", Offset, NT_Header->Signature, "Signature");
 	File_Header32(&NT_Header->FileHeader);
 	OPTIONAL_HEADER32(&NT_Header->OptionalHeader);
@@ -20,7 +20,7 @@ int File_Header32(PIMAGE_FILE_HEADER PFILE_HEADER)
 {
 	FILE_HEADER_ELEMENT_OFFSET ElementOffset;
 	Offset += sizeof(DWORD);	// NT_HEADER Signature
-	Offset += setFileHeaderElementOffset(&ElementOffset);
+	Offset = setFileHeaderElementOffset(&ElementOffset);
 	printf("%08X\t%08.4X\t%-16s\n", ElementOffset.Machine, PFILE_HEADER->Machine, "Machine");
 	// Section °¹¼ö
 	printf("%08X\t%08.4X\t%-16s\n", ElementOffset.NumberOfSections, PFILE_HEADER->NumberOfSections, "NumberOfSections");

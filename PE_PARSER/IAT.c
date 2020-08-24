@@ -1,7 +1,7 @@
 #include "SectionHeader.h"
 
 #define SECTION_VirtualAddress PSECTION_HEADER[i].VirtualAddress
-#define SECTION_SizeOfRawData PSECTION_HEADER[i].SizeOfRawData
+#define SECTION_VirtualSize PSECTION_HEADER[i].Misc.VirtualSize
 #define SECTION_PointerToRawData PSECTION_HEADER[i].PointerToRawData
 
 #define IMPORT_RVA PDirectory->VirtualAddress
@@ -9,7 +9,8 @@
 
 // VA_PointerToRawData = SECTION_VirtualAddress - SECTION_PointerToRawData;
 int showImportDirectoryInfo(unsigned int VA_PointerToRawData);
-int showImportFunctions(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData);
+int showImportFunctions64(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData);
+int showImportFunctions32(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData);
 unsigned int FileOffset;
 
 int ImportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
@@ -18,19 +19,20 @@ int ImportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY
 	
 	for (unsigned int i = 0; i < NumberOfSection; i++)
 	{
-		SectionEND = SECTION_SizeOfRawData + SECTION_PointerToRawData;
-		if (PSECTION_HEADER[i].Misc.VirtualSize > SECTION_SizeOfRawData)
+		SectionEND = SECTION_VirtualAddress + SECTION_VirtualSize;
+		if (PSECTION_HEADER[i].SizeOfRawData < SECTION_VirtualSize)
 		{
 			printf("%s VirtualSzie is bigger than SECTION_SizeOfRawData\n", PSECTION_HEADER[i].Name);
 			continue;
 		}
 
 		// 해당 IMPORT RVA가 섹션 범위에 있는지 확인
-		if (IMPORT_RVA > SECTION_PointerToRawData && IMPORT_RVA < SectionEND)
+		if (IMPORT_RVA > SECTION_VirtualAddress && IMPORT_RVA < SectionEND)
 		{
 			FileOffset = IMPORT_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;
 			fseek(fp, FileOffset, SEEK_SET);
-			printf("\nOFFSET : %08X\n", IMPORT_RVA);
+			printf("\nSection : %s\n", PSECTION_HEADER[i].Name);
+			printf("OFFSET : %08X\n", IMPORT_RVA);
 			printf("VA : %08X\n", SECTION_VirtualAddress);
 			printf("PointerToRawData : %08X\n", SECTION_PointerToRawData);
 			printf("OFFSET - VA + PointerToRawData = RVA\n");
@@ -84,14 +86,20 @@ int showImportDirectoryInfo(unsigned int VA_PointerToRawData)
 		printf("%08X\t%08X\t%08X\t%-16s\n\n", FileOffset += sizeof(ImageDirectory.Name), ImageDirectory.FirstThunk,
 			FirstThunkOffset, "FirstThunk(IAT)");
 		FileOffset += sizeof(ImageDirectory.FirstThunk);
-		showImportFunctions(FirstThunkOffset, VA_PointerToRawData);
+		// 64bit
+		if (Machine == 0x8664)
+			showImportFunctions64(FirstThunkOffset, VA_PointerToRawData);
+		// 32bit
+		else if (Machine == 0x014c)
+			showImportFunctions32(FirstThunkOffset, VA_PointerToRawData);
+		
 		// fp 위치 복원
 		fseek(fp, OriginFpPosition, SEEK_SET);
 	}
 	return 0;
 }
 
-int showImportFunctions(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData)
+int showImportFunctions64(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData)
 {
 
 	LONGLONG ImportFunctionOffset;
@@ -111,6 +119,40 @@ int showImportFunctions(unsigned int FirstThunkOffset, unsigned int VA_PointerTo
 		else if (ImportFunctionOffset < 0)
 		{
 			printf("%8s\t%8s\tOrdinal : %04X\n", "NULL","NULL", (int)ImportFunctionOffset & 0xFFFF);
+			fseek(fp, OriginFpPosition, SEEK_SET);
+			continue;
+		}
+		// save origin fp
+		ImportFunctionOffset = ImportFunctionOffset - VA_PointerToRawData;
+		// fp move to import function offset
+		fseek(fp, (unsigned int)ImportFunctionOffset, SEEK_SET);
+		fread(&HINT, sizeof(WORD), 1, fp);
+		fread(ImportFunctionName, 64, 1, fp);
+		printf("%08.4X\t%08X\t%-16s\n", HINT, (unsigned int)ImportFunctionOffset, ImportFunctionName);
+	}
+	return 0;
+}
+
+int showImportFunctions32(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData)
+{
+
+	unsigned int ImportFunctionOffset;
+	unsigned int OriginFpPosition = FirstThunkOffset;
+	// 이거 두 개 구조체로 묶든가 하기
+	WORD HINT;
+	unsigned char ImportFunctionName[64];
+	printf("%8s\t%8s\t%-16s\n", "HINT", "OFFSET", "NAME");
+	// print functions from import library
+	while (1)
+	{
+		fseek(fp, OriginFpPosition, SEEK_SET);
+		fread(&ImportFunctionOffset, sizeof(int), 1, fp);
+		OriginFpPosition = ftell(fp);
+		if (ImportFunctionOffset == 0)
+			break;
+		else if (ImportFunctionOffset < 0)
+		{
+			printf("%8s\t%8s\tOrdinal : %04X\n", "NULL", "NULL", ImportFunctionOffset & 0xFFFF);
 			fseek(fp, OriginFpPosition, SEEK_SET);
 			continue;
 		}

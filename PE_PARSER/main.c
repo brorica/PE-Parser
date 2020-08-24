@@ -11,7 +11,6 @@ int Machine32();
 
 int main()
 {
-	WORD Machine = 0;
 
 	if ((fp = fopen("notepad.exe", "rb")) == NULL)
 	{
@@ -25,7 +24,7 @@ int main()
 	fread(&Machine, sizeof(WORD), 1, fp);
 	fseek(fp, Offset, SEEK_SET);
 	// 64bit
-	if (Machine == 0x8664) 
+	if (Machine == 0x8664)
 		Machine64();
 	// 32bit
 	else if (Machine == 0x014c)
