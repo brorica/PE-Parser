@@ -360,6 +360,5 @@ MigrationBackup/
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio
 
 # Test File
-test.c
-target.exe
-notepad.exe
+test.*
+*.exe

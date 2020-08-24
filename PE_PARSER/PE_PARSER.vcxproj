@@ -143,16 +143,18 @@
     <ClCompile Include="EAT.c" />
     <ClCompile Include="IAT.c" />
     <ClCompile Include="IMAGE_DOS_HEADER.c" />
+    <ClCompile Include="Intel386\NT_HEADER32.c" />
+    <ClCompile Include="Intel386\NT_HEADER_OPTIONAL32.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="NT_HEADER.c" />
+    <ClCompile Include="AMD64\NT_HEADER64.c" />
     <ClCompile Include="NT_HEADER_OFFSET.c" />
-    <ClCompile Include="NT_HEADER_OPTIONAL32.c" />
-    <ClCompile Include="NT_HEADER_OPTIONAL64.c" />
-    <ClCompile Include="SECTION_HEADER64.c" />
+    <ClCompile Include="AMD64\NT_HEADER_OPTIONAL64.c" />
+    <ClCompile Include="SECTION_HEADER.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NT_HEADER_OFFSET.h" />
-    <ClInclude Include="SectionHeader.h" />
+    <ClInclude Include="libs\File.h" />
+    <ClInclude Include="libs\NT_HEADER_OFFSET.h" />
+    <ClInclude Include="libs\Header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

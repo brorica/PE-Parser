@@ -13,12 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\64bit">
+      <UniqueIdentifier>{c471dec6-bbb7-41b3-bc91-59f8d5c5fa60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\32bit">
+      <UniqueIdentifier>{b0313a96-2878-485b-9506-520f681ae054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="IAT.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="EAT.c">
@@ -27,27 +30,36 @@
     <ClCompile Include="IMAGE_DOS_HEADER.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="NT_HEADER.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="NT_HEADER_OFFSET.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="NT_HEADER_OPTIONAL32.c">
+    <ClCompile Include="SECTION_HEADER.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="NT_HEADER_OPTIONAL64.c">
+    <ClCompile Include="IAT.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SECTION_HEADER64.c">
+    <ClCompile Include="AMD64\NT_HEADER_OPTIONAL64.c">
+      <Filter>소스 파일\64bit</Filter>
+    </ClCompile>
+    <ClCompile Include="AMD64\NT_HEADER64.c">
+      <Filter>소스 파일\64bit</Filter>
+    </ClCompile>
+    <ClCompile Include="Intel386\NT_HEADER_OPTIONAL32.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Intel386\NT_HEADER32.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NT_HEADER_OFFSET.h">
+    <ClInclude Include="libs\Header.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SectionHeader.h">
+    <ClInclude Include="libs\NT_HEADER_OFFSET.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\File.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
