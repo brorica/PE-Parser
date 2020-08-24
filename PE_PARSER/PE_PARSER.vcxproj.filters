@@ -33,33 +33,33 @@
     <ClCompile Include="NT_HEADER_OFFSET.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="NT_HEADER64.c">
-      <Filter>소스 파일\64bit</Filter>
-    </ClCompile>
-    <ClCompile Include="NT_HEADER_OPTIONAL64.c">
-      <Filter>소스 파일\64bit</Filter>
-    </ClCompile>
-    <ClCompile Include="NT_HEADER32.c">
-      <Filter>소스 파일\32bit</Filter>
-    </ClCompile>
-    <ClCompile Include="NT_HEADER_OPTIONAL32.c">
-      <Filter>소스 파일\32bit</Filter>
-    </ClCompile>
     <ClCompile Include="SECTION_HEADER.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="IAT.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="AMD64\NT_HEADER_OPTIONAL64.c">
+      <Filter>소스 파일\64bit</Filter>
+    </ClCompile>
+    <ClCompile Include="AMD64\NT_HEADER64.c">
+      <Filter>소스 파일\64bit</Filter>
+    </ClCompile>
+    <ClCompile Include="Intel386\NT_HEADER_OPTIONAL32.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Intel386\NT_HEADER32.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NT_HEADER_OFFSET.h">
+    <ClInclude Include="libs\Header.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SectionHeader.h">
+    <ClInclude Include="libs\NT_HEADER_OFFSET.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="File.h">
+    <ClInclude Include="libs\File.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

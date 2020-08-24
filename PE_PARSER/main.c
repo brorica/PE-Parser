@@ -1,9 +1,12 @@
-#include "SectionHeader.h"
+#include "libs/Header.h"
 #pragma warning(disable : 4996)
 
 #define SectionSize sizeof(IMAGE_SECTION_HEADER)
+#define PExoortDirecotry64 &Image_Nt_Header64.OptionalHeader.DataDirectory[0]
+#define PExoortDirecotry32 &Image_Nt_Header32.OptionalHeader.DataDirectory[0]
 #define PImportDirectory64 &Image_Nt_Header64.OptionalHeader.DataDirectory[1]
 #define PImportDirectory32 &Image_Nt_Header32.OptionalHeader.DataDirectory[1]
+
 
 int Machine64();
 int Machine32();
@@ -12,7 +15,7 @@ int Machine32();
 int main()
 {
 
-	if ((fp = fopen("notepad.exe", "rb")) == NULL)
+	if ((fp = fopen("notepad.exe","rb")) == NULL)
 	{
 		fprintf(stderr, "File open error\n");
 		return 1;
@@ -42,6 +45,7 @@ int Machine64()
 
 	PSECTION_HEADER = (PIMAGE_SECTION_HEADER)malloc(SectionSize * SectionNumber);
 	Section_Header(PSECTION_HEADER, SectionNumber);
+	ExportDirectory(PSECTION_HEADER, PExoortDirecotry64, SectionNumber);
 	ImportDirectory(PSECTION_HEADER, PImportDirectory64, SectionNumber);
 	free(PSECTION_HEADER);
 	return 0;
@@ -56,6 +60,7 @@ int Machine32()
 
 	PSECTION_HEADER = (PIMAGE_SECTION_HEADER)malloc(SectionSize * SectionNumber);
 	Section_Header(PSECTION_HEADER, SectionNumber);
+	ExportDirectory(PSECTION_HEADER, PExoortDirecotry32, SectionNumber);
 	ImportDirectory(PSECTION_HEADER, PImportDirectory32, SectionNumber);
 	free(PSECTION_HEADER);
 	return 0;

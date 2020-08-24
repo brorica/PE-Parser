@@ -1,4 +1,4 @@
-#include "NT_HEADER_Offset.h"
+#include "libs/NT_HEADER_OFFSET.h"
 
 int setFileHeaderElementOffset(PFILE_HEADER_ELEMENT_OFFSET ElementOffset)
 {

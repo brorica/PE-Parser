@@ -1,17 +1,15 @@
-#include "SectionHeader.h"
+#include "libs/Header.h"
 
 #define SECTION_VirtualAddress PSECTION_HEADER[i].VirtualAddress
 #define SECTION_VirtualSize PSECTION_HEADER[i].Misc.VirtualSize
 #define SECTION_PointerToRawData PSECTION_HEADER[i].PointerToRawData
 
 #define IMPORT_RVA PDirectory->VirtualAddress
-#define IMPORT_SIZE PDirectory->Size
 
 // VA_PointerToRawData = SECTION_VirtualAddress - SECTION_PointerToRawData;
 int showImportDirectoryInfo(unsigned int VA_PointerToRawData);
 int showImportFunctions64(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData);
 int showImportFunctions32(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData);
-unsigned int FileOffset;
 
 int ImportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
 {
@@ -26,25 +24,24 @@ int ImportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY
 			continue;
 		}
 
-		// 해당 IMPORT RVA가 섹션 범위에 있는지 확인
-		if (IMPORT_RVA > SECTION_VirtualAddress && IMPORT_RVA < SectionEND)
+		if (IMPORT_RVA == 0)
 		{
-			FileOffset = IMPORT_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;
-			fseek(fp, FileOffset, SEEK_SET);
-			printf("\nSection : %s\n", PSECTION_HEADER[i].Name);
+			printf("Can't Find IMPORT RVA's File Offest\n");
+			return 0;
+		}
+		// 해당 IMPORT RVA가 섹션 범위에 있는지 확인
+		else if (IMPORT_RVA > SECTION_VirtualAddress && IMPORT_RVA < SectionEND)
+		{
+			Offset = IMPORT_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;
+			fseek(fp, Offset, SEEK_SET);
+			printf("\nImport Section : %s\n", PSECTION_HEADER[i].Name);
 			printf("OFFSET : %08X\n", IMPORT_RVA);
 			printf("VA : %08X\n", SECTION_VirtualAddress);
 			printf("PointerToRawData : %08X\n", SECTION_PointerToRawData);
 			printf("OFFSET - VA + PointerToRawData = RVA\n");
-			printf("RVA : %08x\n", FileOffset);
+			printf("RVA : %08x\n", Offset);
 			showImportDirectoryInfo(SECTION_VirtualAddress - SECTION_PointerToRawData);
-			return FileOffset;
-		}
-		// RVA가 없거나, RVA가 section범위를 초과하면 함수 종료
-		else if (IMPORT_RVA == 0 || IMPORT_RVA < SECTION_PointerToRawData)
-		{
-			printf("Can't Find IMPORT RVA's File Offest\n");
-			return 0;
+			return Offset;
 		}
 	}
 	printf("Can't Find IMPORT RVA's File Offest\n");
@@ -75,17 +72,17 @@ int showImportDirectoryInfo(unsigned int VA_PointerToRawData)
 		FirstThunkOffset = (ImageDirectory.FirstThunk - VA_PointerToRawData);
 
 		printf("\n%8s\t%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "RVA", "DESCRIPTION");
-		printf("%08X\t%08X\t%08X\t%-16s\n", FileOffset, ImageDirectory.OriginalFirstThunk,
+		printf("%08X\t%08X\t%08X\t%-16s\n", Offset, ImageDirectory.OriginalFirstThunk,
 			(ImageDirectory.OriginalFirstThunk - VA_PointerToRawData), "OriginalFirstThunk(INT)");
-		printf("%08X\t%08X\t%08X\t%-16s\n", FileOffset += sizeof(ImageDirectory.OriginalFirstThunk), 
+		printf("%08X\t%08X\t%08X\t%-16s\n", Offset += sizeof(ImageDirectory.OriginalFirstThunk), 
 			ImageDirectory.TimeDateStamp, 0, "TimeDateStamp");
-		printf("%08X\t%08X\t%08X\t%-16s\n", FileOffset += sizeof(ImageDirectory.TimeDateStamp), 
+		printf("%08X\t%08X\t%08X\t%-16s\n", Offset += sizeof(ImageDirectory.TimeDateStamp), 
 			ImageDirectory.ForwarderChain, 0, "ForwarderChain");
-		printf("%08X\t%08X\t%08X\t%-16s(%s)\n", FileOffset += sizeof(ImageDirectory.ForwarderChain), ImageDirectory.Name,
+		printf("%08X\t%08X\t%08X\t%-16s(%s)\n", Offset += sizeof(ImageDirectory.ForwarderChain), ImageDirectory.Name,
 			ImportModuleNameOffset, "Name", ImportModuleName);
-		printf("%08X\t%08X\t%08X\t%-16s\n\n", FileOffset += sizeof(ImageDirectory.Name), ImageDirectory.FirstThunk,
+		printf("%08X\t%08X\t%08X\t%-16s\n\n", Offset += sizeof(ImageDirectory.Name), ImageDirectory.FirstThunk,
 			FirstThunkOffset, "FirstThunk(IAT)");
-		FileOffset += sizeof(ImageDirectory.FirstThunk);
+		Offset += sizeof(ImageDirectory.FirstThunk);
 		// 64bit
 		if (Machine == 0x8664)
 			showImportFunctions64(FirstThunkOffset, VA_PointerToRawData);

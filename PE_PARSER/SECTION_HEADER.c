@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "SectionHeader.h"
+#include "libs/Header.h"
 
 // RAW = Offset - VirtualAddress + PointerToRawData
 // VirtualSize > SizeOfRawData ¸é ¼º¸³ X
