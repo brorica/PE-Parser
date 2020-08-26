@@ -6,6 +6,8 @@
 #define PExoortDirecotry32 &Image_Nt_Header32.OptionalHeader.DataDirectory[0]
 #define PImportDirectory64 &Image_Nt_Header64.OptionalHeader.DataDirectory[1]
 #define PImportDirectory32 &Image_Nt_Header32.OptionalHeader.DataDirectory[1]
+#define PRelocationDirectory64 &Image_Nt_Header64.OptionalHeader.DataDirectory[5]
+#define PRelocationDirectory32 &Image_Nt_Header32.OptionalHeader.DataDirectory[5]
 
 
 int Machine64();
@@ -45,8 +47,9 @@ int Machine64()
 
 	PSECTION_HEADER = (PIMAGE_SECTION_HEADER)malloc(SectionSize * SectionNumber);
 	Section_Header(PSECTION_HEADER, SectionNumber);
-	ExportDirectory(PSECTION_HEADER, PExoortDirecotry64, SectionNumber);
-	ImportDirectory(PSECTION_HEADER, PImportDirectory64, SectionNumber);
+	// ExportDirectory(PSECTION_HEADER, PExoortDirecotry64, SectionNumber);
+	// ImportDirectory(PSECTION_HEADER, PImportDirectory64, SectionNumber);
+	RelocationDirectory(PSECTION_HEADER, PRelocationDirectory64, SectionNumber);
 	free(PSECTION_HEADER);
 	return 0;
 }
@@ -60,8 +63,9 @@ int Machine32()
 
 	PSECTION_HEADER = (PIMAGE_SECTION_HEADER)malloc(SectionSize * SectionNumber);
 	Section_Header(PSECTION_HEADER, SectionNumber);
-	ExportDirectory(PSECTION_HEADER, PExoortDirecotry32, SectionNumber);
-	ImportDirectory(PSECTION_HEADER, PImportDirectory32, SectionNumber);
+	// ExportDirectory(PSECTION_HEADER, PExoortDirecotry32, SectionNumber);
+	// ImportDirectory(PSECTION_HEADER, PImportDirectory32, SectionNumber);
+	RelocationDirectory(PSECTION_HEADER, PRelocationDirectory32, SectionNumber);
 	free(PSECTION_HEADER);
 	return 0;
 }

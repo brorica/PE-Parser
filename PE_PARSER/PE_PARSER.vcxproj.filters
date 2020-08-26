@@ -51,6 +51,9 @@
     <ClCompile Include="Intel386\NT_HEADER32.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Relocation.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs\Header.h">
