@@ -22,11 +22,13 @@ int main()
 		fprintf(stderr, "File open error\n");
 		return 1;
 	}
+	WORDSIZE = sizeof(WORD);
+	DWORDSIZE = sizeof(DWORD);
 	printf("%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "DESCRIPTION");
 
 	Offset = Dos_Header(fp);
-	fseek(fp, Offset + sizeof(DWORD), SEEK_SET);
-	fread(&Machine, sizeof(WORD), 1, fp);
+	fseek(fp, Offset + DWORDSIZE, SEEK_SET);
+	fread(&Machine, WORDSIZE, 1, fp);
 	fseek(fp, Offset, SEEK_SET);
 	// 64bit
 	if (Machine == 0x8664)

@@ -5,7 +5,7 @@
 #define SECTION_PointerToRawData PSECTION_HEADER[i].PointerToRawData
 
 #define RELOC_RVA PDirectory->VirtualAddress
-int showRelocationDirectoryInfo(unsigned int VA_PointerToRawData);
+int showRelocationDirectoryInfo();
 int RelocationDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
 {
 	unsigned int SectionEND;
@@ -42,12 +42,11 @@ int RelocationDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIREC
 	return 0;
 }
 
-int showRelocationDirectoryInfo(unsigned int VA_PointerToRawData)
+int showRelocationDirectoryInfo()
 {
 	IMAGE_BASE_RELOCATION RelocDirectory;
-	WORD item;
-	unsigned int WORDSIZE = sizeof(WORD);
-	unsigned int DWORDSIZE = sizeof(DWORD);
+	WORD item[512];
+	unsigned int itemSize;
 	unsigned int relocsize = sizeof(IMAGE_BASE_RELOCATION);
 	unsigned char type[12][32] = { {"ABSOLUTE"},{"HIGH"},{"LOW"},
 		{"HIGHLOW"},{"HIGHADJ"},{"MACHINE_SPECIFIC_5"},{"RESERVED"},
@@ -60,23 +59,18 @@ int showRelocationDirectoryInfo(unsigned int VA_PointerToRawData)
 			break;
 		printf("\n\n%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "DESCRIPTION");
 		printf("%08X\t%08X\t%-16s\n", Offset, RelocDirectory.VirtualAddress, "VirtualAddress");
-		printf("%08X\t%08X\t%-16s\n\n", (Offset += sizeof(RelocDirectory.VirtualAddress)),
+		printf("%08X\t%08X\t%-16s\n\n", (Offset += DWORDSIZE),
 			RelocDirectory.SizeOfBlock, "SizeOfBlock");
 		Offset += DWORDSIZE;
+		itemSize = RelocDirectory.SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION);
 		printf("%8s\t%8s\t%-32s\n", "Offset","item","type");
-		while (1)
+		fread(item, itemSize, 1, fp);
+		itemSize = itemSize >> 1;
+		for (unsigned int i = 0; i < itemSize; i++)
 		{
-			fread(&item, WORDSIZE, 1, fp);
-			if ((item >> 12) > 10)
-			{
-				fseek(fp, Offset, SEEK_SET);
-				break;
-			}
-			printf("%08X\t%08.4X\t%-32s\n", Offset, item, type[item>>12]);
+			printf("%08X\t%08.4X\t%-32s\n", Offset, item[i], type[item[i] >> 12]);
 			Offset += WORDSIZE;
-			if (item == 0 )
-				break;			
-		}		
+		}
 	}
 	return 0;
 }

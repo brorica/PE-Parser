@@ -74,15 +74,15 @@ int showImportDirectoryInfo(unsigned int VA_PointerToRawData)
 		printf("\n%8s\t%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "RVA", "DESCRIPTION");
 		printf("%08X\t%08X\t%08X\t%-16s\n", Offset, ImageDirectory.OriginalFirstThunk,
 			(ImageDirectory.OriginalFirstThunk - VA_PointerToRawData), "OriginalFirstThunk(INT)");
-		printf("%08X\t%08X\t%08X\t%-16s\n", (Offset += sizeof(ImageDirectory.OriginalFirstThunk)), 
+		printf("%08X\t%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE),
 			ImageDirectory.TimeDateStamp, 0, "TimeDateStamp");
-		printf("%08X\t%08X\t%08X\t%-16s\n", (Offset += sizeof(ImageDirectory.TimeDateStamp)), 
+		printf("%08X\t%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE),
 			ImageDirectory.ForwarderChain, 0, "ForwarderChain");
-		printf("%08X\t%08X\t%08X\t%-16s(%s)\n", (Offset += sizeof(ImageDirectory.ForwarderChain)), ImageDirectory.Name,
+		printf("%08X\t%08X\t%08X\t%-16s(%s)\n", (Offset += DWORDSIZE), ImageDirectory.Name,
 			ImportModuleNameOffset, "Name", ImportModuleName);
-		printf("%08X\t%08X\t%08X\t%-16s\n\n", (Offset += sizeof(ImageDirectory.Name)), ImageDirectory.FirstThunk,
+		printf("%08X\t%08X\t%08X\t%-16s\n\n", (Offset += DWORDSIZE), ImageDirectory.FirstThunk,
 			FirstThunkOffset, "FirstThunk(IAT)");
-		Offset += sizeof(ImageDirectory.FirstThunk);
+		Offset += DWORDSIZE;
 		// 64bit
 		if (Machine == 0x8664)
 			showImportFunctions64(FirstThunkOffset, VA_PointerToRawData);
