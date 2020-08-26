@@ -50,15 +50,15 @@ int showExportDirectoryInfo()
 	printf("%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "DESCRIPTION");
 	fread(&ExportDirectory, sizeof(IMAGE_EXPORT_DIRECTORY), 1, fp);
 	printf("%08X\t%08X\t%-16s\n",Offset, ExportDirectory.Characteristics,"Characteristics");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.Characteristics)),ExportDirectory.TimeDateStamp,"TimeDateStamp");
-	printf("%08X\t%08.4X\t%-16s\n", (Offset += sizeof(ExportDirectory.TimeDateStamp)), ExportDirectory.MajorVersion,"MajorVersion");
-	printf("%08X\t%08.4X\t%-16s\n", (Offset += sizeof(ExportDirectory.MajorVersion)), ExportDirectory.MinorVersion,"MinorVersion");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.MinorVersion)), ExportDirectory.Name,"Name");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.Name)), ExportDirectory.Base,"Base");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.Base)), ExportDirectory.NumberOfFunctions,"NumberOfFunctions");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.NumberOfFunctions)), ExportDirectory.NumberOfNames,"NumberOfNames");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.NumberOfNames)), ExportDirectory.AddressOfFunctions,"AddressOfFunctions");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.AddressOfFunctions)), ExportDirectory.AddressOfNames,"AddressOfNames");
-	printf("%08X\t%08X\t%-16s\n", (Offset += sizeof(ExportDirectory.AddressOfNames)), ExportDirectory.AddressOfNameOrdinals,"AddressOfNameOrdinals");
+	printf("%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE),ExportDirectory.TimeDateStamp,"TimeDateStamp");
+	printf("%08X\t%08.4X\t%-16s\n", (Offset += DWORDSIZE), ExportDirectory.MajorVersion,"MajorVersion");
+	printf("%08X\t%08.4X\t%-16s\n", (Offset += WORDSIZE), ExportDirectory.MinorVersion,"MinorVersion");
+	printf("%08X\t%08X\t%-16s\n", (Offset += WORDSIZE), ExportDirectory.Name,"Name");
+	printf("%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE), ExportDirectory.Base,"Base");
+	printf("%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE), ExportDirectory.NumberOfFunctions,"NumberOfFunctions");
+	printf("%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE), ExportDirectory.NumberOfNames,"NumberOfNames");
+	printf("%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE), ExportDirectory.AddressOfFunctions,"AddressOfFunctions");
+	printf("%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE), ExportDirectory.AddressOfNames,"AddressOfNames");
+	printf("%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE), ExportDirectory.AddressOfNameOrdinals,"AddressOfNameOrdinals");
 	return 0;
 }
