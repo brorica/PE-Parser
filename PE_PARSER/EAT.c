@@ -8,18 +8,13 @@
 
 int showExportDirectoryInfo();
 
-int ExportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
+int ExportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection, unsigned int FileAlignment)
 {
 	unsigned int SectionEND;
-
+	unsigned int realPointerToRawData;
 	for (unsigned int i = 0; i < NumberOfSection; i++)
 	{
 		SectionEND = SECTION_VirtualAddress + SECTION_VirtualSize;
-		if (PSECTION_HEADER[i].SizeOfRawData < SECTION_VirtualSize)
-		{
-			printf("%s VirtualSzie is bigger than SECTION_SizeOfRawData\n", PSECTION_HEADER[i].Name);
-			continue;
-		}
 
 		// RVA가 없으면 함수 종료
 		if (EXPORT_RVA == 0)
@@ -28,10 +23,11 @@ int ExportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY
 			return 0;
 		}
 
-		// 해당 IMPORT RVA가 섹션 범위에 있는지 확인
+		// 해당 RVA가 섹션 범위에 있는지 확인
 		else if (EXPORT_RVA > SECTION_VirtualAddress && EXPORT_RVA < SectionEND)
 		{
-			Offset = EXPORT_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;
+			realPointerToRawData = FileAlignment * (SECTION_PointerToRawData / FileAlignment);
+			Offset = EXPORT_RVA - SECTION_VirtualAddress + realPointerToRawData;
 			printf("\n\nExport Offest : %08X\n", Offset);
 			fseek(fp, Offset, SEEK_SET);
 			showExportDirectoryInfo();

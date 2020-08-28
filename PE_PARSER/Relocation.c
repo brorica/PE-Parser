@@ -23,7 +23,7 @@ int RelocationDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIREC
 			printf("Can't Find IMPORT RVA's File Offest\n");
 			return 0;
 		}
-		// 해당 IMPORT RVA가 섹션 범위에 있는지 확인
+		// 해당 RVA가 섹션 범위에 있는지 확인
 		else if (RELOC_RVA >= SECTION_VirtualAddress && RELOC_RVA <= SectionEND)
 		{
 			Offset = RELOC_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;

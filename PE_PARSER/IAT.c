@@ -11,36 +11,32 @@ int showImportDirectoryInfo(unsigned int VA_PointerToRawData);
 int showImportFunctions64(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData);
 int showImportFunctions32(unsigned int FirstThunkOffset, unsigned int VA_PointerToRawData);
 
-int ImportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection)
+int ImportDirectory(PIMAGE_SECTION_HEADER PSECTION_HEADER, PIMAGE_DATA_DIRECTORY PDirectory, unsigned int NumberOfSection, unsigned int FileAlignment)
 {
 	unsigned int SectionEND;
-	
+	unsigned int realPointerToRawData;
 	for (unsigned int i = 0; i < NumberOfSection; i++)
 	{
 		SectionEND = SECTION_VirtualAddress + SECTION_VirtualSize;
-		if (PSECTION_HEADER[i].SizeOfRawData < SECTION_VirtualSize)
-		{
-			printf("%s VirtualSzie is bigger than SECTION_SizeOfRawData\n", PSECTION_HEADER[i].Name);
-			continue;
-		}
 
 		if (IMPORT_RVA == 0)
 		{
 			printf("Can't Find IMPORT RVA's File Offest\n");
 			return 0;
 		}
-		// 해당 IMPORT RVA가 섹션 범위에 있는지 확인
+		// 해당 RVA가 섹션 범위에 있는지 확인
 		else if (IMPORT_RVA > SECTION_VirtualAddress && IMPORT_RVA < SectionEND)
 		{
-			Offset = IMPORT_RVA - SECTION_VirtualAddress + SECTION_PointerToRawData;
+			realPointerToRawData = FileAlignment * (SECTION_PointerToRawData / FileAlignment);
+			Offset = IMPORT_RVA - SECTION_VirtualAddress + realPointerToRawData;
 			fseek(fp, Offset, SEEK_SET);
 			printf("\nImport Section : %s\n", PSECTION_HEADER[i].Name);
 			printf("OFFSET : %08X\n", IMPORT_RVA);
 			printf("VA : %08X\n", SECTION_VirtualAddress);
-			printf("PointerToRawData : %08X\n", SECTION_PointerToRawData);
+			printf("PointerToRawData : %08X\n", realPointerToRawData);
 			printf("OFFSET - VA + PointerToRawData = RVA\n");
 			printf("RVA : %08x\n", Offset);
-			showImportDirectoryInfo(SECTION_VirtualAddress - SECTION_PointerToRawData);
+			showImportDirectoryInfo(SECTION_VirtualAddress - realPointerToRawData);
 			return Offset;
 		}
 	}
@@ -54,6 +50,7 @@ int showImportDirectoryInfo(unsigned int VA_PointerToRawData)
 	// 모듈의 함수 리스트 위치
 	unsigned int FirstThunkOffset;
 	unsigned int ImportModuleNameOffset;
+	unsigned int INT_RVA;
 	// 스트림 위치 저장용
 	unsigned int OriginFpPosition;
 	char ImportModuleName[64];
@@ -72,8 +69,17 @@ int showImportDirectoryInfo(unsigned int VA_PointerToRawData)
 		FirstThunkOffset = (ImageDirectory.FirstThunk - VA_PointerToRawData);
 
 		printf("\n%8s\t%8s\t%8s\t%-16s\n", "OFFSET", "VALUE", "RVA", "DESCRIPTION");
-		printf("%08X\t%08X\t%08X\t%-16s\n", Offset, ImageDirectory.OriginalFirstThunk,
-			(ImageDirectory.OriginalFirstThunk - VA_PointerToRawData), "OriginalFirstThunk(INT)");
+		// 일부 패커에선 INT대신 IAT를 씀
+		if (ImageDirectory.OriginalFirstThunk == 0)
+		{
+			printf("%08X\t%08X\t%08X\t%-16s\n", Offset, ImageDirectory.OriginalFirstThunk,
+				(ImageDirectory.OriginalFirstThunk), "OriginalFirstThunk(INT)");
+		}
+		else
+		{
+			printf("%08X\t%08X\t%08X\t%-16s\n", Offset, ImageDirectory.OriginalFirstThunk,
+				(ImageDirectory.OriginalFirstThunk - VA_PointerToRawData), "OriginalFirstThunk(INT)");
+		}
 		printf("%08X\t%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE),
 			ImageDirectory.TimeDateStamp, 0, "TimeDateStamp");
 		printf("%08X\t%08X\t%08X\t%-16s\n", (Offset += DWORDSIZE),

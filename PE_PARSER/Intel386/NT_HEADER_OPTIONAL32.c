@@ -1,5 +1,5 @@
 #include "../libs/NT_HEADER_OFFSET.h"
-int DATA_DIRECTORY32(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int DataDirectory[][2]);
+int DATA_DIRECTORY32(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int DataDirectory[][2], unsigned int NumberOfRvaAndSizes);
 
 int OPTIONAL_HEADER32(PIMAGE_OPTIONAL_HEADER32 POPTIONAL_HEADER)
 {
@@ -34,12 +34,12 @@ int OPTIONAL_HEADER32(PIMAGE_OPTIONAL_HEADER32 POPTIONAL_HEADER)
 	//printf("%08X\t%08X\t%-16s\n", ElementOffset.SizeOfHeapReserve, POPTIONAL_HEADER->SizeOfHeapReserve, "SizeOfHeapReserve");
 	//printf("%08X\t%08X\t%-16s\n", ElementOffset.SizeOfHeapCommit, POPTIONAL_HEADER->SizeOfHeapCommit, "SizeOfHeapCommit");
 	//printf("%08X\t%08X\t%-16s\n", ElementOffset.LoaderFlags, POPTIONAL_HEADER->LoaderFlags, "LoaderFlags");
-	printf("%08X\t%08X\t%-16s\n", ElementOffset.NumberOfRvaAndSizes, POPTIONAL_HEADER->NumberOfRvaAndSizes, "NumberOfRvaAndSizes");
-	DATA_DIRECTORY32(POPTIONAL_HEADER->DataDirectory, ElementOffset.DataDirectory);
+	printf("%08X\t%08X\t%-16s\n\n", ElementOffset.NumberOfRvaAndSizes, POPTIONAL_HEADER->NumberOfRvaAndSizes, "NumberOfRvaAndSizes");
+	DATA_DIRECTORY32(POPTIONAL_HEADER->DataDirectory, ElementOffset.DataDirectory, POPTIONAL_HEADER->NumberOfRvaAndSizes);
 	return sizeof(IMAGE_OPTIONAL_HEADER32);
 }
 
-int DATA_DIRECTORY32(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int DataDirectory[][2])
+int DATA_DIRECTORY32(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int DataDirectory[][2], unsigned int NumberOfRvaAndSizes)
 {
 
 	char DIRECTORY_TYPE[IMAGE_NUMBEROF_DIRECTORY_ENTRIES][16] = {
@@ -48,7 +48,7 @@ int DATA_DIRECTORY32(PIMAGE_DATA_DIRECTORY PDirectory, unsigned int DataDirector
 		{ "ARCHITECTURE" }, { "GLOBALPTR " }, { "TLS" }, { "LOAD_CONFIG"},
 		{ "BOUND_IMPORT" }, { "IAT" }, { "DELAY_IMPORT" }, { "COM_DESCRIPTOR" } };
 
-	for (unsigned int i = 0; i < IMAGE_NUMBEROF_DIRECTORY_ENTRIES; i++)
+	for (unsigned int i = 0; i < NumberOfRvaAndSizes; i++)
 	{
 		printf("%08X\t%08X\t%-16s(RVA)\n", DataDirectory[i][0], PDirectory[i].VirtualAddress, DIRECTORY_TYPE[i]);
 		printf("%08X\t%08X\t%-16s(SIZE)\n", DataDirectory[i][1], PDirectory[i].Size, DIRECTORY_TYPE[i]);

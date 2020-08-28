@@ -6,10 +6,15 @@ int File_Header64(PIMAGE_FILE_HEADER PFILE_HEADER);
 
 int NT_Header64(PIMAGE_NT_HEADERS64 NT_Header)
 {
+	// PFILE_HEADER->SizeOfOptionalHeader is dynamic
+	// SizeOfOptionalHeader is set the SECTION_HEADER offset
+	unsigned int SizeOfOptionalHeader;		
 	fread(NT_Header, sizeof(IMAGE_NT_HEADERS64), 1, fp);
 	printf("%08X\t%08X\t%-16s\n\n", Offset, NT_Header->Signature, "Signature");
-	File_Header64(&NT_Header->FileHeader);
+	SizeOfOptionalHeader = File_Header64(&NT_Header->FileHeader);
+	// printf("%08X\n", Offset); 110
 	OPTIONAL_HEADER64(&NT_Header->OptionalHeader);
+	Offset += SizeOfOptionalHeader;
 	return NT_Header->FileHeader.NumberOfSections;
 }
 
@@ -26,5 +31,5 @@ int File_Header64(PIMAGE_FILE_HEADER PFILE_HEADER)
 	//printf("%08X\t%08X\t%-16s\n", ElementOffset.NumberOfSymbols, PFILE_HEADER->NumberOfSymbols, "NumberOfSymbols");
 	printf("%08X\t%08.4X\t%-16s\n", ElementOffset.SizeOfOptionalHeader, PFILE_HEADER->SizeOfOptionalHeader, "SizeOfOptionalHeader");
 	printf("%08X\t%08.4X\t%-16s\n\n", ElementOffset.Characteristics, PFILE_HEADER->Characteristics, "Characteristics");
-	return 0;
+	return PFILE_HEADER->SizeOfOptionalHeader;
 }
